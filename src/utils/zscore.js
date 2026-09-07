@@ -24,19 +24,15 @@ export function processCsvData(data) {
     let totalScore = 0;
     let hasValidScores = false;
 
-    // The 'Total' column in the new CSV is at index 7.
-    // However, to be safe, if index 7 is numeric we can just use it, 
-    // or we can sum only columns 2 to 5 (the category marks).
-    // Let's search for the Total column dynamically if possible, or just sum until a non-numeric column or until we hit the Total column.
-    
-    // Actually, in the new format, index 7 is the Total score.
-    const potentialTotal = parseFloat(row[7]);
+    // The 'Total' column for the real competition data format is at index 10
+    // (Judge=0, Team=1, 8 score categories=2-9, Total=10).
+    const potentialTotal = parseFloat(row[10]);
     if (!isNaN(potentialTotal)) {
       totalScore = potentialTotal;
       hasValidScores = true;
     } else {
-      // Fallback: Sum all numeric columns starting from index 2, up to 5
-      for (let j = 2; j <= 5; j++) {
+      // Fallback: sum all 8 score category columns (index 2 to 9)
+      for (let j = 2; j <= 9; j++) {
         const cell = row[j];
         const num = parseFloat(cell);
         if (!isNaN(num)) {
